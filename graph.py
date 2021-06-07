@@ -8,7 +8,6 @@ edges = [(0, 0), (0, 1), (0, 2), (1, 1), (1, 3), (2, 0), (2, 2), (2, 4), (3, 1),
          (3, 5), (4, 4), (4, 6), (5, 5), (5, 7), (6, 6), (6, 7), (6, 4), (7, 7), (7, 5)]
 weights = [' ', 'RT', 'R', ' ', 'R', 'L', ' ', 'RT', 'L', ' ',
            'RT', ' ', 'L', ' ', 'L', ' ', 'RT', 'R', ' ', 'R']
-
 graph = {
   'A' : ['A','B','C'],
   'B' : ['B', 'D'],
@@ -19,11 +18,7 @@ graph = {
   'G' : ['G','H','E'],
   'H' : ['H','F']
 }
-
-queue = []
 path = []
-
-
 
 def getColors():
     colors = []
@@ -100,9 +95,9 @@ def displayGraph():
     window.mainloop()
 
 def bfs(visited, graph, node, goal):
+  queue = []
   visited.append(node)
   queue.append(node)
-  path = []
 
   while queue:
     s = queue.pop(0)
@@ -119,6 +114,8 @@ def bfsSearchGraph():
     start = entry1.get()
     end = entry2.get()
 
+    global path
+    path = []
     visited = []
     bfs(visited, graph, start, end)
 
@@ -139,7 +136,8 @@ def dfsSearchGraph():
     end = entry2.get()
 
     visited = []
-
+    global path
+    path = []
     dfs(visited, graph, start, end)
     displayGraph()
 
