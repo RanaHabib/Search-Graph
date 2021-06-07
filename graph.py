@@ -6,6 +6,9 @@ from igraph import *
 # A0 B1 C2 D3 E4 F5 G6 H7
 edges = [(0, 0), (0, 1), (0, 2), (1, 1), (1, 3), (2, 0), (2, 2), (2, 4), (3, 1), (3, 3),
          (3, 5), (4, 4), (4, 6), (5, 5), (5, 7), (6, 6), (6, 7), (6, 4), (7, 7), (7, 5)]
+weights = [' ', 'RT', 'R', ' ', 'R', 'L', ' ', 'RT', 'L', ' ',
+           'RT', ' ', 'L', ' ', 'L', ' ', 'RT', 'R', ' ', 'R']
+
 graph = {
   'A' : ['A','B','C'],
   'B' : ['B', 'D'],
@@ -17,7 +20,6 @@ graph = {
   'H' : ['H','F']
 }
 
-visited = []
 queue = []
 path = []
 
@@ -25,13 +27,15 @@ path = []
 
 def getColors():
     colors = []
+
     for key in graph:
-        print(key)
+
         if key in path:
             colors.append("green")
         else:
             colors.append("white")
-
+    print(path)
+    print(colors)
     return colors
 
 def createGraph():
@@ -52,16 +56,16 @@ def createGraph():
     g.add_edges(edges)
 
     # Add weights and edge labels
-    weights = ['L', 'RT', 'R', 'L', 'R', 'L','R','RT','L','R',
-               'RT', 'R', 'L', 'RT', 'L', 'L', 'RT', 'R', 'RT', 'R']
-    #g.es['weight'] = weights
-    #g.es['label'] = weights
+    weights = [' ', 'RT', 'R', ' ', 'R', 'L', ' ', 'RT', 'L', ' ',
+               'RT', ' ', 'L', ' ', 'L', ' ', 'RT', 'R', ' ', 'R']
+    g.es['weight'] = weights
+    g.es['label'] = weights
 
     my_layout = g.layout("kk")
 
     visual_style = {}
 
-    out_name = "graph_coloured.png"
+    out_name = "C:\\Users\\Zoey\\Desktop\\graph_coloured.png"
 
     # Set bbox and margin
     visual_style["bbox"] = (700, 700)
@@ -90,7 +94,7 @@ def createGraph():
 
 def displayGraph():
     createGraph()
-    img = ImageTk.PhotoImage(file = "graph_coloured.png")
+    img = ImageTk.PhotoImage(file = "C:\\Users\\Zoey\\Desktop\\graph_coloured.png")
     panel = Label(window, image=img)
     panel.grid(row=0, column=1)
     window.mainloop()
@@ -98,6 +102,7 @@ def displayGraph():
 def bfs(visited, graph, node, goal):
   visited.append(node)
   queue.append(node)
+  path = []
 
   while queue:
     s = queue.pop(0)
@@ -114,27 +119,28 @@ def bfsSearchGraph():
     start = entry1.get()
     end = entry2.get()
 
+    visited = []
     bfs(visited, graph, start, end)
 
     displayGraph()
 
-def dfs(Visited, graph, node, goal):
+def dfs(visited, graph, node, goal):
     if node == goal:
         path.append(node)
         return
-    if node not in Visited:
+    if node not in visited:
         path.append(node)
-        Visited.add(node)
+        visited.append(node)
         for neighbour in graph[node]:
-            dfs(Visited, graph, neighbour, goal)
+            dfs(visited, graph, neighbour, goal)
 
 def dfsSearchGraph():
     start = entry1.get()
     end = entry2.get()
 
-    Visited = set() # Set to keep track of visited nodes.
+    visited = []
 
-    dfs(Visited, graph, start, end)
+    dfs(visited, graph, start, end)
     displayGraph()
 
 
