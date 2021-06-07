@@ -1,36 +1,27 @@
 import tkinter as tk
 from tkinter import *
 from PIL import ImageTk
-
 from igraph import *
-edges = [(0, 1), (0, 2), (1, 3), (2, 5), (1, 4), (4, 5)]
+
+# A0 B1 C2 D3 E4 F5 G6 H7
+edges = [(0, 0), (0, 1), (0, 2), (1, 1), (1, 3), (2, 0), (2, 2), (2, 4), (3, 1), (3, 3),
+         (3, 5), (4, 4), (4, 6), (5, 5), (5, 7), (6, 6), (6, 7), (6, 4), (7, 7), (7, 5)]
 graph = {
-  'A' : ['B','C'],
-  'B' : ['D', 'E'],
-  'C' : ['F'],
-  'D' : [],
-  'E' : ['F'],
-  'F' : []
+  'A' : ['A','B','C'],
+  'B' : ['B', 'D'],
+  'C' : ['A','C','E'],
+  'D' : ['B','D','F'],
+  'E' : ['E','G'],
+  'F' : ['F','H'],
+  'G' : ['G','H','E'],
+  'H' : ['H','F']
 }
 
-visited = [] # List to keep track of visited nodes.
-queue = []     #Initialize a queue
+visited = []
+queue = []
 path = []
 
-def bfs(visited, graph, node, goal):
-  visited.append(node)
-  queue.append(node)
 
-  while queue:
-    s = queue.pop(0)
-    path.append(s)
-    if s == goal:
-        break
-
-    for neighbour in graph[s]:
-      if neighbour not in visited:
-        visited.append(neighbour)
-        queue.append(neighbour)
 
 def getColors():
     colors = []
@@ -48,9 +39,10 @@ def createGraph():
     g = Graph(directed=True)
 
     # Add 5 vertices
-    g.add_vertices(6)
+    g.add_vertices(8)
 
-    names = ["A","B","C","D","E","F"]
+    names = ["A","B","C","D","E","F","G","H"]
+
     # Add ids and labels to vertices
     for i in range(len(g.vs)):
         g.vs[i]["id"] = i
@@ -60,19 +52,20 @@ def createGraph():
     g.add_edges(edges)
 
     # Add weights and edge labels
-    weights = [8, 6, 3, 6, 4, 9]
-    g.es['weight'] = weights
-    g.es['label'] = weights
+    weights = ['L', 'RT', 'R', 'L', 'R', 'L','R','RT','L','R',
+               'RT', 'R', 'L', 'RT', 'L', 'L', 'RT', 'R', 'RT', 'R']
+    #g.es['weight'] = weights
+    #g.es['label'] = weights
 
-    my_layout = g.layout_lgl()
+    my_layout = g.layout("kk")
 
     visual_style = {}
 
-    out_name = "C:\\Users\\Zoey\\Desktop\\graph_coloured.png"
+    out_name = "graph_coloured.png"
 
     # Set bbox and margin
-    visual_style["bbox"] = (800, 700)
-    visual_style["margin"] = 27
+    visual_style["bbox"] = (700, 700)
+    visual_style["margin"] = 40
 
     # Set vertex colours
     if len(path) != 0:
@@ -81,13 +74,13 @@ def createGraph():
         visual_style["vertex_color"] = 'white'
 
     # Set vertex size
-    visual_style["vertex_size"] = 45
+    visual_style["vertex_size"] = 50
 
     # Set vertex lable size
-    visual_style["vertex_label_size"] = 22
+    visual_style["vertex_label_size"] = 10
 
     # Don't curve the edges
-    visual_style["edge_curved"] = False
+    visual_style["edge_curved"] = True
 
     # Set the layout
     visual_style["layout"] = my_layout
@@ -97,10 +90,25 @@ def createGraph():
 
 def displayGraph():
     createGraph()
-    img = ImageTk.PhotoImage(file = "C:\\Users\\Zoey\\Desktop\\graph_coloured.png")
+    img = ImageTk.PhotoImage(file = "graph_coloured.png")
     panel = Label(window, image=img)
     panel.grid(row=0, column=1)
     window.mainloop()
+
+def bfs(visited, graph, node, goal):
+  visited.append(node)
+  queue.append(node)
+
+  while queue:
+    s = queue.pop(0)
+    path.append(s)
+    if s == goal:
+        break
+
+    for neighbour in graph[s]:
+      if neighbour not in visited:
+        visited.append(neighbour)
+        queue.append(neighbour)
 
 def bfsSearchGraph():
     start = entry1.get()
@@ -110,8 +118,25 @@ def bfsSearchGraph():
 
     displayGraph()
 
+def dfs(Visited, graph, node, goal):
+    if node == goal:
+        path.append(node)
+        return
+    if node not in Visited:
+        path.append(node)
+        Visited.add(node)
+        for neighbour in graph[node]:
+            dfs(Visited, graph, neighbour, goal)
+
 def dfsSearchGraph():
-    pass
+    start = entry1.get()
+    end = entry2.get()
+
+    Visited = set() # Set to keep track of visited nodes.
+
+    dfs(Visited, graph, start, end)
+    displayGraph()
+
 
 window = tk.Tk()
 window.title("Search graph")
@@ -133,6 +158,7 @@ entry1.grid(row=1, column=0, sticky="ew", padx=1, pady=1)
 label2.grid(row=3, column=0, sticky="ew", padx=1, pady=1)
 entry2.grid(row=4, column=0, sticky="ew", padx=1, pady=1)
 bfsBtn.grid(row=6, column=0, sticky="ew", padx=1, pady=20)
+dfsBtn.grid(row=7, column=0, sticky="ew", padx=1, pady=20)
 
 fr_buttons.grid(row=0, column=0, sticky="ns")
 displayGraph()
