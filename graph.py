@@ -24,7 +24,6 @@ def getColors():
     colors = []
 
     for key in graph:
-
         if key in path:
             colors.append("green")
         else:
@@ -92,6 +91,8 @@ def displayGraph():
     img = ImageTk.PhotoImage(file = "C:\\Users\\Zoey\\Desktop\\graph_coloured.png")
     panel = Label(window, image=img)
     panel.grid(row=0, column=1)
+    pathOrder = tk.Label(window, text=''.join(path))
+    pathOrder.grid(row=1, column=1)
     window.mainloop()
 
 def bfs(visited, graph, node, goal):
