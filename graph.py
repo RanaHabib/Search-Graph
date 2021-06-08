@@ -130,15 +130,13 @@ def dfs(graph, source, goal):
     stack = [source]
 
     while (len(stack) != 0):
-
         s = stack.pop()
 
         if s not in path:
-
             path.append(s)
         elif s in path:
-
             continue
+                  
         if s == goal:
             break
 
