@@ -58,7 +58,7 @@ def createGraph():
 
     visual_style = {}
 
-    out_name = "C:\\Users\\Zoey\\Desktop\\graph_coloured.png"
+    out_name = "graph_coloured.png"
 
     # Set bbox and margin
     visual_style["bbox"] = (700, 700)
@@ -87,7 +87,7 @@ def createGraph():
 
 def displayGraph():
     createGraph()
-    img = ImageTk.PhotoImage(file = "C:\\Users\\Zoey\\Desktop\\graph_coloured.png")
+    img = ImageTk.PhotoImage(file = "graph_coloured.png")
     panel = Label(window, image=img)
     panel.grid(row=0, column=1)
     text = ''
