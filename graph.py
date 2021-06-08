@@ -91,7 +91,9 @@ def displayGraph():
     img = ImageTk.PhotoImage(file = "C:\\Users\\Zoey\\Desktop\\graph_coloured.png")
     panel = Label(window, image=img)
     panel.grid(row=0, column=1)
-    pathOrder = tk.Label(window, text=''.join(path))
+    text = ''
+    text = ''.join(path)
+    pathOrder = tk.Label(window, text=text, height=3,width=10 )
     pathOrder.grid(row=1, column=1)
     window.mainloop()
 
@@ -122,24 +124,42 @@ def bfsSearchGraph():
 
     displayGraph()
 
-def dfs(visited, graph, node, goal):
-    if node == goal:
-        path.append(node)
-        return
-    if node not in visited:
-        path.append(node)
-        visited.append(node)
-        for neighbour in graph[node]:
-            dfs(visited, graph, neighbour, goal)
+def dfs(graph, source, goal):
+    if source is None or source not in graph:
+        return "Invalid input"
+
+    stack = [source]
+
+    while (len(stack) != 0):
+
+        s = stack.pop()
+
+        if s not in path:
+
+            path.append(s)
+        elif s in path:
+
+            continue
+        if s == goal:
+            break
+
+        if s not in graph:
+            # leaf node
+            continue
+
+        for neighbor in graph[s]:
+            stack.append(neighbor)
+
+    return " ".join(path)
 
 def dfsSearchGraph():
     start = entry1.get()
     end = entry2.get()
 
-    visited = []
+    #visited = []
     global path
     path = []
-    dfs(visited, graph, start, end)
+    dfs(graph, start, end)
     displayGraph()
 
 
